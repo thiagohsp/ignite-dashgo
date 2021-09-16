@@ -15,8 +15,8 @@ export default function Profile({ showProfileData = true }: ProfileProps) {
 
       {showProfileData && (
         <Box mr="4" textAlign="right">
-          <Text>{user.name}</Text>
-          <Text color="purple.500" fontSize="x-small">{user.email}</Text>
+          <Text>{user?.name}</Text>
+          <Text color="purple.500" fontSize="x-small">{user?.email}</Text>
         </Box>
       )}
 
