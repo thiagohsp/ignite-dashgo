@@ -1,7 +1,8 @@
 import Router from "next/router";
 import { ReactNode, createContext, useState, useEffect } from "react";
-import { api } from "../services/api";
+import { api } from "../services/apiClient";
 import { destroyCookie, parseCookies, setCookie } from "nookies";
+import { AuthTokenError } from "../errors/AuthTokenError";
 
 type SignInCredentials = {
   email: string;
@@ -43,8 +44,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
       api.get('/me').then((response) => {
         const { email, name, permissions, roles } = response.data;
         setUser({ email, name, permissions, roles });
-      }).catch(() =>
-        signOut()
+      }).catch(() => {
+        if (process.browser)
+          signOut()
+        else
+          return Promise.reject(new AuthTokenError())
+
+      }
       );
 
     }
