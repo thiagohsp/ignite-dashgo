@@ -6,7 +6,7 @@ import { RiAddLine, RiPencilLine } from "react-icons/ri";
 import Header from "../../components/Header";
 import Pagination from "../../components/Pagination";
 import Sidebar from "../../components/Sidebar";
-import { api } from "../../services/api";
+import { api } from "../../services/apiClient";
 import { getUsers, useUsers } from "../../services/hooks/useUsers";
 import { queryClient } from "../../services/queryClient";
 
@@ -85,7 +85,7 @@ export default function UsersList({ users }) {
                 </Thead>
                 <Tbody>
 
-                  {data.users.map((user) => (
+                  {data.users?.map((user) => (
                     <Tr key={user.id}>
                       <Td px={["4", "4", "6"]} color="purple.300" width={8}>
                         <Checkbox colorScheme="pink" />

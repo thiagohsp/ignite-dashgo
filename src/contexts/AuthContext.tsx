@@ -10,6 +10,7 @@ type SignInCredentials = {
 }
 
 type AuthContextData = {
+  signOut: () => void;
   signIn: (credentials: SignInCredentials) => Promise<void>;
   user: User;
   isAuthenticated: boolean;
@@ -28,21 +29,15 @@ type User = {
 
 export const AuthContext = createContext({} as AuthContextData);
 
-export function signOut() {
-  destroyCookie(undefined, 'dashgo.token');
-  destroyCookie(undefined, 'dashgo.refreshToken');
-  Router.push('/')
-}
-
 export function AuthProvider({ children }: AuthProviderProps) {
 
   useEffect(() => {
     const { 'dashgo.token': token } = parseCookies();
-
+    
     if (token) {
 
       api.get('/me').then((response) => {
-        const { email, name, permissions, roles } = response.data;
+        const { email, name, permissions, roles } = response.data?.user;
         setUser({ email, name, permissions, roles });
       }).catch(() => {
         if (process.browser)
@@ -67,23 +62,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
         email, password
       });
 
-      const { name, permissions, roles, token, refreshToken } = response.data;
+      //const { name, permissions, roles, token, refreshToken } = response.data;
+      const { user , token } = response.data;
 
       setCookie(undefined, 'dashgo.token', token, {
         maxAge: 60 * 60 * 24 * 30, // 30 dias
         path: '/'
       });
-      setCookie(undefined, 'dashgo.refreshToken', refreshToken, {
-        maxAge: 60 * 60 * 24 * 30, // 30 dias
-        path: '/'
-      });
 
-      setUser({
-        email,
-        name,
-        permissions,
-        roles
-      });
+      // setCookie(undefined, 'dashgo.refreshToken', refreshToken, {
+      //   maxAge: 60 * 60 * 24 * 30, // 30 dias
+      //   path: '/'
+      // });
+
+      setUser(user);
 
       api.defaults.headers['Authorization'] = `Bearer ${token}`
 
@@ -91,14 +83,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     } catch (err) {
 
-      console.log(err)
+      //console.log(err)
 
     }
 
   }
 
+  async function signOut() {
+    destroyCookie(undefined, 'dashgo.token');
+    destroyCookie(undefined, 'dashgo.refreshToken');
+    setUser(null)
+    Router.push('/')
+  }
+
   return (
-    <AuthContext.Provider value={{ signIn, isAuthenticated, user }}>
+    <AuthContext.Provider value={{ signIn, isAuthenticated, user, signOut }}>
       {children}
     </AuthContext.Provider>
   )

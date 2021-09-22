@@ -3,16 +3,18 @@ import { parseCookies } from "nookies";
 
 export function withSSRGuest<P>(fn: GetServerSideProps<P>): GetServerSideProps {
   return async (ctx: GetServerSidePropsContext): Promise<GetServerSidePropsResult<P>> => {
-    const cookies = parseCookies(ctx);
+    // const cookies = parseCookies(ctx);
 
-    if (cookies['dashgo.token']) {
-      return {
-        redirect: {
-          destination: '/dashboard',
-          permanent: false
-        }
-      }
-    }
+    // console.log(cookies);
+
+    // if (cookies['dashgo.token']) {
+    //   return {
+    //     redirect: {
+    //       destination: '/dashboard',
+    //       permanent: false
+    //     }
+    //   }
+    // }
 
     return await fn(ctx)
   }
