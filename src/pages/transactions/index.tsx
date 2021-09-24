@@ -18,16 +18,18 @@ import {
 } from "@chakra-ui/react";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import NextLink from "next/link";
-import { useEffect, useState } from "react";
-import { RiAddLine, RiPencilLine } from "react-icons/ri";
+import { useState } from "react";
+import { RiAddLine } from "react-icons/ri";
 import Header from "../../components/Header";
 import Pagination from "../../components/Pagination";
 import Sidebar from "../../components/Sidebar";
 import { generateFakeTransactions, getTransactions, useTransactions } from "../../services/hooks/useTransactions";
 import { withSSRAuth } from "../../utils/withSSRAuth";
+import CreateTransactionModal from "./_create-modal";
 
 export default function TransactionsList({ transactions, totalCount }) {
 
+  const [ isOpenModal, setIsOpenModal ] = useState(false);
   const [page, setPage] = useState(1);
   const { data, isLoading, error, isFetching, isFetched } = useTransactions(page, {
     placeholderData: () => {
@@ -39,6 +41,10 @@ export default function TransactionsList({ transactions, totalCount }) {
     }
   });
 
+  const handleOnCloseModal = () => {
+    setIsOpenModal(false);
+  }
+
   const isWideVersion = useBreakpointValue({
     base: false,
     lg: true,
@@ -47,6 +53,11 @@ export default function TransactionsList({ transactions, totalCount }) {
   return (
     <Flex direction="column" h="100vh">
       <Header />
+
+      <CreateTransactionModal 
+        isOpen={isOpenModal}
+        onClose={handleOnCloseModal}
+      />
 
       <Flex w="100%" my="6" maxWidth={1480} mx="auto" px="6">
         <Sidebar />
@@ -60,17 +71,15 @@ export default function TransactionsList({ transactions, totalCount }) {
               )}
             </Heading>
 
-            <NextLink href="/users/create" passHref>
-              <Button
-                as="a"
-                size="sm"
-                fontSize="sm"
-                colorScheme="pink"
-                leftIcon={<Icon as={RiAddLine} fontSize="20" />}
-              >
-                Criar novo
-              </Button>
-            </NextLink>
+            <Button
+              size="sm"
+              fontSize="sm"
+              colorScheme="pink"
+              leftIcon={<Icon as={RiAddLine} fontSize="20" />}
+              onClick={() => setIsOpenModal(true)}
+            >
+              Criar novo
+            </Button>
           </Flex>
 
           { error ? (

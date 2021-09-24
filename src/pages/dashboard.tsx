@@ -1,18 +1,20 @@
 import { Box, Flex, SimpleGrid, Text, theme } from "@chakra-ui/react";
 import { ApexOptions } from "apexcharts";
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import dynamic from 'next/dynamic'
 import { parseCookies } from "nookies";
+import { useEffect } from "react";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import { setupAPIClient } from "../services/api";
-import { api } from "../services/apiClient";
 import { withSSRAuth } from "../utils/withSSRAuth";
 
 
 const Chart = dynamic(() => import('react-apexcharts'), {
   ssr: false
 });
+
+const colorPalette = ['#00D8B6','#FF4560','#008FFB',  '#FEB019', '#775DD0']
 
 const options: ApexOptions = {
   chart: {
@@ -25,8 +27,8 @@ const options: ApexOptions = {
   tooltip: { enabled: false },
   xaxis: {
     type: "datetime",
-    axisBorder: { color: theme.colors.gray[600] },
-    axisTicks: { color: theme.colors.gray[600] },
+    axisBorder: { color: theme.colors.gray[500] },
+    axisTicks: { color: theme.colors.gray[500] },
     categories: [
       '2021-05-12T00:00:00.000Z',
       '2021-05-13T00:00:00.000Z',
@@ -37,6 +39,7 @@ const options: ApexOptions = {
       '2021-05-18T00:00:00.000Z',
     ]
   },
+  colors: colorPalette,
   fill: {
     opacity: 0.3,
     type: 'gradient',
@@ -48,13 +51,15 @@ const options: ApexOptions = {
   }
 };
 
-const series = [
-  { name: 'S1', data: [10, 20, 35, 21, 48, 9, 3] }
-];
 
+export default function Dashboard({dashboards}) {
 
-export default function Dashboard() {
+  const series = [
+    { name: 'incomes', data: Object.values(dashboards).map((item: any) => item.income) },
+    { name: 'expenses', data: Object.values(dashboards).map((item: any) => item.expense) },
+  ]
 
+  options.xaxis.categories = Object.keys(dashboards);
 
   return (
     <Flex direction="column" h="100vh">
@@ -71,7 +76,7 @@ export default function Dashboard() {
             borderRadius={8}
             pb="4"
           >
-            <Text fontSize="lg" mb="4">Novos Usuários da Semana</Text>
+            <Text fontSize="lg" mb="4">Receitas x Despesas</Text>
             <Chart options={options} series={series} type="area" height={160} />
           </Box>
 
@@ -81,8 +86,10 @@ export default function Dashboard() {
             borderRadius={8}
             pb="4"
           >
-            <Text fontSize="lg" mb="4">Taxa de conversão</Text>
+            <Text fontSize="lg" mb="4">Receitas x Despesas</Text>
+            <Chart options={options} series={series} type="area" height={160} />
           </Box>
+          
         </SimpleGrid>
       </Flex>
     </Flex>
@@ -90,8 +97,29 @@ export default function Dashboard() {
   )
 }
 
-export const getServerSideProps = withSSRAuth(async (ctx) => {
+export const getServerSideProps: GetServerSideProps = withSSRAuth(async (ctx: GetServerSidePropsContext) => {
+  
+  const api = setupAPIClient(ctx);
+
+  const { data } = await api.get('dashboard');
+
   return {
-    props: {}
-  }
+    props: {
+      dashboards: data
+    },
+  };
 });
+
+// export const getServerSideProps = withSSRAuth(async (ctx) => {
+
+//   const api = setupAPIClient(ctx)
+//   const dashboards = await api.get('/dashboards');
+
+//   console.log(dashboards)
+
+//   return {
+//     props: {
+//       dashboards
+//     }
+//   }
+// });

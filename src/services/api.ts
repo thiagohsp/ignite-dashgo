@@ -9,8 +9,6 @@ export function setupAPIClient(ctx = undefined) {
 
   let cookies = parseCookies(ctx);
 
-  console.log(cookies)
-
   const api = axios.create({
     baseURL: 'http://localhost:3333/',
     headers: {

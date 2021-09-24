@@ -1,4 +1,4 @@
-import { Avatar, Box, Flex, HStack, Icon, IconButton, Input, Text, useBreakpointValue } from "@chakra-ui/react";
+import { Avatar, Box, Flex, HStack, Icon, IconButton, Select, Text, useBreakpointValue } from "@chakra-ui/react";
 import { RiMenuLine, RiNotificationLine, RiSearchLine, RiUserAddLine } from 'react-icons/ri'
 import { useSidebarDrawer } from "../../contexts/SidebarDrawerContext";
 import Logo from "./Logo";

@@ -1,4 +1,4 @@
-import { Flex, Icon, Input } from "@chakra-ui/react";
+import { Flex, Icon, Select } from "@chakra-ui/react";
 import { RiSearchLine } from "react-icons/ri";
 
 export default function SearchBox() {
@@ -14,7 +14,7 @@ export default function SearchBox() {
       bg="purple.800"
       borderRadius="full"
     >
-      <Input
+      <Select
         color="green.50"
         variant="unstyled"
         px="4" mr="4"
