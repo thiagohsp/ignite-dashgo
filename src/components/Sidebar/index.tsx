@@ -15,9 +15,9 @@ export default function Sidebar() {
     return (
       <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
         <DrawerOverlay>
-          <DrawerContent bg="purple.800" p="4">
+          <DrawerContent bg="twitter.400" p="4">
             <DrawerCloseButton mt="6" />
-            <DrawerHeader>Navegação</DrawerHeader>
+            <DrawerHeader color="twitter.800">Navegação</DrawerHeader>
             <DrawerBody>
               <SidebarNav />
             </DrawerBody>

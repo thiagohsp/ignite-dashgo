@@ -16,3 +16,8 @@ export interface IOption {
   value: string | number;
   label: string;
 }
+
+type Transaction = {
+  id: number;
+  
+}

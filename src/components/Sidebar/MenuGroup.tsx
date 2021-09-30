@@ -9,7 +9,7 @@ interface MenuGroupProps {
 export default function MenuGroup({ title, children }: MenuGroupProps) {
   return (
     <Box>
-      <Text fontWeight="bold" color="purple.400" fontSize="small">
+      <Text fontWeight="bold" color="twitter.500" fontSize="small">
         {title}
       </Text>
       <Stack spacing="4" mt="8" align="stretch">

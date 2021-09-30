@@ -16,19 +16,27 @@ export default function Profile({ showProfileData = true }: ProfileProps) {
 
       {showProfileData && (
         <Box mr="4" textAlign="right">
-          <Text>{user?.name}</Text>
-          <Text color="purple.300" fontSize="x-small">{user?.email}</Text>          
+          <Text color="white" fontWeight="bold">{user?.name}</Text>
+          <Text color="whiteAlpha.700" fontSize="x-small">{user?.email}</Text>          
         </Box>
       )}
 
-      <Avatar size="md" name="Thiago Pereira" src="https://github.com/thiagohsp.png" />
+      <Avatar 
+        size="lg" 
+        name="Thiago Pereira" 
+        src="https://github.com/thiagohsp.png"
+        border="3px solid white"
+        boxShadow="lg"
+      />
       
       <Flex
         ml={["4", "6"]}
         pl={["4", "6"]}
-        color="purple.300"
+        height={8}
+        color="white"
         borderLeftWidth={2}
-        borderColor="purple.700"
+        borderColor="whiteAlpha.500"
+        placeItems="center"
       >
 
         <Icon 

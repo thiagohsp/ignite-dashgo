@@ -6,6 +6,7 @@ export default function Logo() {
     fontWeight="bold"
     letterSpacing="tight"
     w="64"
+    color="white"
   >
     dashGo
     <Text as="span" ml="1" color="pink.500">.</Text>

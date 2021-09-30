@@ -8,9 +8,9 @@ export default function NotificationsNav() {
       mx={["6", "8"]}
       pr={["6", "8"]}
       py="1"
-      color="purple.300"
+      color="white"
       borderRightWidth={2}
-      borderColor="purple.700"
+      borderColor="whiteAlpha.400"
     >
 
       <Icon as={RiNotificationLine} fontSize="20" />

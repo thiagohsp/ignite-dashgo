@@ -44,7 +44,8 @@ export default function SignIn() {
         flexDir="column"
         width="100%"
         maxWidth={360}
-        bg="purple.800"
+        bg="blue.200"
+        boxShadow="md"
         p="8"
         borderRadius={8}
         onSubmit={handleSubmit(handleSignIn)}
@@ -72,7 +73,7 @@ export default function SignIn() {
         <Button
           type="submit"
           mt="6"
-          colorScheme="pink"
+          colorScheme="green"
           size="lg"
           isLoading={formState.isSubmitting}>
           Entrar

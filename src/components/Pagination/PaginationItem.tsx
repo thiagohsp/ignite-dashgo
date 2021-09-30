@@ -11,12 +11,12 @@ export default function PaginationItem({ page, isCurrent = false, onPageChange }
     return (
       <Button
         size="sm"
-        fontSize="xs"
+        fontSize="sm"
         width="4"
-        colorScheme="pink"
+        colorScheme="twitter"
         disabled
         _disabled={{
-          bg: 'pink.500',
+          bg: 'gray.200',
           cursor: 'default'
         }}
       >
@@ -26,12 +26,13 @@ export default function PaginationItem({ page, isCurrent = false, onPageChange }
   }
   return (
     <Button
+      color="white"
       size="sm"
       fontSize="xs"
       width="4"
-      bg="purple.700"
+      bg="twitter.700"
       _hover={{
-        bg: 'purple.500'
+        bg: 'twitter.500'
       }}
       onClick={() => onPageChange(page)}
     >

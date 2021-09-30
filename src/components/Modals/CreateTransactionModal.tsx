@@ -9,16 +9,21 @@ import {
   ModalOverlay, 
   Stack,
   HStack,
-  Box
+  ButtonGroup,
+  Icon,
+  Heading,
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "../../components/Form/Input";
-import { IBankAccount, IOption } from "../../interfaces";
+import { NumberInput } from "../../components/Form/NumberInput";
+import { IBankAccount, ICategory, IOption } from "../../interfaces";
 import { api } from "../../services/apiClient";
 import ReactSelect, { StylesConfig } from 'react-select'
 import { theme } from "@chakra-ui/core";
+import { RiAddLine, RiArrowDownCircleFill, RiArrowUpCircleFill } from "react-icons/ri";
+import { saveTransaction, SaveTransactionValues } from "../../services/hooks/useTransactions";
 
 interface CreateTransactionModalProps {
   isOpen: boolean;
@@ -32,6 +37,7 @@ export default function CreateTransactionModal({
 
   const [ bankAccountsOptions, setBankAccountsOptions ] = useState<IOption[]>([]);
   const [ categoriesOptions, setCategoriesOptions ] = useState<IOption[]>([]);
+  const [ type, setType ] = useState<"income" | "expense">();
   
   useEffect(() => {
     async function loadBankAccountsOptions() {
@@ -74,29 +80,20 @@ export default function CreateTransactionModal({
   }, []) 
 
 
-  const { register, handleSubmit, formState } = useForm({
-    resolver: yupResolver(undefined),
-  });
+  const { register, handleSubmit, formState } = useForm();
 
   const { errors } = formState;
 
   const colourStyles: StylesConfig = {
-    singleValue: (styles) => ({ ...styles, color: 'white', fontSize: '1.125rem' }),
-    input: (styles ) => ({ ...styles, color: 'white', fontSize: '1.125rem' }),
+    singleValue: (styles) => ({ ...styles, color: 'gray', fontSize: '1.125rem' }),
+    input: (styles ) => ({ ...styles, color: 'gray', fontSize: '1.125rem' }),
     control: (styles, { isFocused,  }) => ({
        ...styles, 
        height: '3rem',
-       border: `2px solid var(--chakra-colors-${ isFocused ? 'pink-500' : 'purple-900'})`,
        borderRadius: '6px',
        paddingLeft:'0.5rem',
-       backgroundColor: 'var(--chakra-colors-purple-900)',
-       boxShadow: 'none',
-       ":hover": {
-         border: `2px solid var(--chakra-colors-${ isFocused ? 'pink-500' : 'purple-900'})`,
-       },
-       ":focus-visible": {
-         border: `2px solid var(--chakra-colors-${ isFocused ? 'pink-500' : 'purple-900'})`,
-       },
+       //backgroundColor: 'var(--chakra-colors-purple-900)',
+       boxShadow: 'lg',
        color: 'white'
     }),
     placeholder: (styles) => ({
@@ -124,40 +121,116 @@ export default function CreateTransactionModal({
     })
   }
 
+  const handleSaveTransaction: SubmitHandler<SaveTransactionValues> = async (values) => {
+    await saveTransaction(values);
+  }
+
   return (
     <>
-      <Modal onClose={onClose} isOpen={isOpen} isCentered>
+      <Modal 
+        onClose={onClose} 
+        isOpen={isOpen} 
+        
+        isCentered
+      >
         <ModalOverlay />
-        <ModalContent bg="purple.800">
-          <ModalHeader>Cadastrar Transação</ModalHeader>
+        <ModalContent
+          as="form" 
+          bg="twitter.50"
+          boxShadow="md"
+          borderRadius={16} 
+          p={4}
+          onSubmit={handleSubmit(handleSaveTransaction)}
+        >
+          <ModalHeader>
+            <Heading size="md" fontWeight="normal">
+              Cadastrar Transações
+            </Heading>
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Stack>
-              <Input placeholder="Descrição" name="title" />
-              {/* <ComboBox name="bank_account_id">
-                  { bankAccountsOptions.length && bankAccountsOptions.map((item) => (
-                      <option value={item.value} style={{ color: "black" }}>{item.label}</option>
-                    ))
-                  }                
-              </ComboBox> */}
+              <Input 
+                placeholder="Descrição" 
+                name="title"
+                {...register('title')} 
+              />
+              
               <ReactSelect
-                name="bank_account"
+                name="bank_account_id"
                 options={bankAccountsOptions}
                 styles={colourStyles}
                 isClearable
+                {...register('bank_account_id')} 
               />
+
               <ReactSelect
-                name="category"
+                name="category_id"
                 options={categoriesOptions}
                 styles={colourStyles}
                 isClearable
+                {...register('category_id')} 
               />
-              <Input placeholder="Valor" name="amount" />
+
+              <ButtonGroup
+                variant="outline"
+                size="lg"
+                spacing={4}
+                w="100%"  
+              >
+                <Button 
+                  border="2px solid"
+                  borderColor="teal.500"
+                  color="teal.500"
+                  w="100%"
+                  height="5rem"
+                  leftIcon={<Icon as={RiArrowUpCircleFill} fontSize="20" />}
+                  _focus={{
+                    bg: "teal.200"
+                  }}
+                  _hover={{
+                    bg: "teal.200"
+                  }}
+                  bg={type === 'income' && 'teal.200'}
+                  onClick={() => setType('income')}
+                >
+                  Entrada
+                </Button>
+                <Button
+                  border="2px solid"
+                  borderColor="pink.600"
+                  color="pink.600" 
+                  w="100%"
+                  height="5rem"
+                  leftIcon={<Icon as={RiArrowDownCircleFill} fontSize="20" />}
+                  _focus={{
+                    bg: "pink.200"
+                  }}
+                  _hover={{
+                    bg: "pink.200"
+                  }}
+                  bg={type === 'expense' && 'pink.200'}
+                  onClick={() => setType('expense')}
+                >
+                  Saída
+                </Button>
+
+             </ButtonGroup>
+
+              <NumberInput
+                name="amount"
+                placeholder="Valor"
+                textAlign="right"
+                float="right" 
+                {...register('amount')} 
+              />
+
+              
             </Stack>
           </ModalBody>
           <ModalFooter>
             <HStack>
-              <Button colorScheme="pink" onClick={onClose}>Salvar</Button>
+              <Button colorScheme="pink" type="submit">Salvar</Button>
               <Button colorScheme="blue" onClick={onClose}>Cancelar</Button>
             </HStack>
           </ModalFooter>

@@ -1,8 +1,6 @@
 import {
   Box,
-  Button,
-  Checkbox,
-  Flex,
+  Button, ButtonGroup, Flex,
   Heading,
   Icon,
   Link,
@@ -14,18 +12,17 @@ import {
   Th,
   Thead,
   Tr,
-  useBreakpointValue,
+  useBreakpointValue
 } from "@chakra-ui/react";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
-import NextLink from "next/link";
 import { useState } from "react";
-import { RiAddLine } from "react-icons/ri";
+import { RiAddLine, RiFile2Fill, RiFile3Fill, RiSave2Line, RiSave3Fill, RiSaveFill, RiSaveLine } from "react-icons/ri";
 import Header from "../../components/Header";
+import CreateTransactionModal from "../../components/Modals/CreateTransactionModal";
 import Pagination from "../../components/Pagination";
 import Sidebar from "../../components/Sidebar";
 import { generateFakeTransactions, getTransactions, useTransactions } from "../../services/hooks/useTransactions";
 import { withSSRAuth } from "../../utils/withSSRAuth";
-import CreateTransactionModal from "./_create-modal";
 
 export default function TransactionsList({ transactions, totalCount }) {
 
@@ -62,7 +59,7 @@ export default function TransactionsList({ transactions, totalCount }) {
       <Flex w="100%" my="6" maxWidth={1480} mx="auto" px="6">
         <Sidebar />
 
-        <Box flex="1" bg="purple.800" p="8" borderRadius="lg">
+        <Box flex="1" bg="white" p="8" borderRadius="lg" boxShadow="inner" >
           <Flex mb="8" justifyContent="space-between" align="center">
             <Heading size="lg" fontWeight="normal">
               Transações
@@ -71,28 +68,40 @@ export default function TransactionsList({ transactions, totalCount }) {
               )}
             </Heading>
 
-            <Button
-              size="sm"
-              fontSize="sm"
-              colorScheme="pink"
-              leftIcon={<Icon as={RiAddLine} fontSize="20" />}
-              onClick={() => setIsOpenModal(true)}
-            >
-              Criar novo
-            </Button>
+            <ButtonGroup>
+
+              <Button
+                size="md"
+                fontSize="sm"
+                colorScheme="pink"
+                leftIcon={<Icon as={RiAddLine} fontSize="20" />}
+                onClick={() => setIsOpenModal(true)}
+              >
+                Criar novo
+              </Button>
+              <Button
+                size="md"
+                fontSize="sm"
+                colorScheme="twitter"
+                leftIcon={<Icon as={RiSave3Fill}   fontSize="20" />}
+                onClick={() => setIsOpenModal(true)}
+              >
+                Importar arquivo
+              </Button>
+            </ButtonGroup>
           </Flex>
 
           { error ? (
             <Flex justify="center">Falha ao buscar dados das transações.</Flex>
           ) : (
             <>
-              <Table colorScheme="whiteAlpha">
+              <Table>
                 <Thead>
-                  <Th color="purple.300" w={48}>Data</Th>
-                  <Th color="purple.300">Descrição</Th>
-                  <Th color="purple.300" w={32} textAlign="right">Valor</Th>
+                  <Th color="gray.300" w={48}>Data</Th>
+                  <Th color="gray.300">Descrição</Th>
+                  <Th color="gray.300" w={32} textAlign="right">Valor</Th>
                 </Thead>
-                <Tbody>
+                <Tbody color="gray.400">
                   {data.transactions?.length && data.transactions.map((transaction) => (
                     <Tr key={transaction.id}>
                       <Td>{transaction.transactionDate}</Td>
@@ -100,7 +109,7 @@ export default function TransactionsList({ transactions, totalCount }) {
                         <Box>
                           <Link href="">
                             <Text fontWeight="bold">{transaction.title}</Text>
-                            <Text fontSize="sm" color="purple.300">
+                            <Text fontSize="sm" color="gray.200">
                               {`${transaction.category?.group} | ${transaction.category?.description}`}
                             </Text>
                           </Link>

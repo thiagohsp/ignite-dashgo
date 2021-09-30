@@ -1,6 +1,8 @@
 import { GetServerSidePropsContext } from "next";
 import { useQuery, UseQueryOptions, UseQueryResult } from "react-query";
+import { number } from "yup/lib/locale";
 import { setupAPIClient } from "../api";
+import { api } from "../apiClient";
 
 type Transaction = {
   id: number;
@@ -25,6 +27,15 @@ type Transaction = {
 type GetTransactionsResponse = {
   transactions: Transaction[];
   totalCount: number;
+}
+
+export interface SaveTransactionValues {
+  title: string;
+  amount: number;
+  type: string;
+  transaction_date: string;
+  category_id: number;
+  bank_account_id: number;
 }
 
 function sleep(milliseconds) {
@@ -97,4 +108,9 @@ export function generateFakeTransactions(size = 10): Transaction[] {
       }
     }
   })
+}
+
+export async function saveTransaction(values: SaveTransactionValues) {
+  console.log(values)
+  return await api.post('/transactions', values) 
 }
