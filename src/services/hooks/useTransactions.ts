@@ -4,7 +4,7 @@ import { number } from "yup/lib/locale";
 import { setupAPIClient } from "../api";
 import { api } from "../apiClient";
 
-type Transaction = {
+export type Transaction = {
   id: number;
   title: string;
   amount: number;
@@ -44,13 +44,17 @@ function sleep(milliseconds) {
   });
 }
 
-export async function getTransactions(page: number, ctx: GetServerSidePropsContext = undefined): Promise<GetTransactionsResponse> {
+export async function getAllTransactions(params: GetTransactionsRequestParams, ctx: GetServerSidePropsContext = undefined): Promise<GetTransactionsResponse> {
+
+  const { bankAccount } = params
 
   const api = setupAPIClient(ctx);
 
   const response = await api.get('transactions', {
     params: {
-      page
+      page: 1, 
+      per_page: 999, 
+      bank_account: bankAccount
     }
   });
 
@@ -78,8 +82,52 @@ export async function getTransactions(page: number, ctx: GetServerSidePropsConte
   }
 }
 
-export function useTransactions(page: number, options: UseQueryOptions): UseQueryResult<any, any> {
-  const result = useQuery(['transactions-list', page], () => getTransactions(page), {
+export async function getTransactions(params: GetTransactionsRequestParams, ctx: GetServerSidePropsContext = undefined): Promise<GetTransactionsResponse> {
+
+  const { page, perPage, bankAccount } = params
+
+  const api = setupAPIClient(ctx);
+
+  const response = await api.get('transactions', {
+    params: {
+      page, 
+      per_page: perPage, 
+      bank_account: bankAccount
+    }
+  });
+
+  const {data} = response;
+
+  const totalCount = data.meta.total // Number(headers['x-total-count'])
+
+  const transactions = data.data.map(transaction => {
+    return {
+      ...transaction,
+      amount: Number(transaction.amount).toLocaleString('pt-BR', {
+        useGrouping: true,
+        minimumFractionDigits: 2
+      }),
+      transactionDate: new Date(transaction.transaction_date).toLocaleDateString('pt-BR', {
+        timeZone: 'UTC',
+        dateStyle: 'short'
+      })
+    }
+  });
+
+  return {
+    totalCount,
+    transactions,
+  }
+}
+
+interface GetTransactionsRequestParams {
+  page: number,
+  perPage: number,
+  bankAccount?: number
+}
+
+export function useTransactions(page: number, bankAccount: number = undefined, options: UseQueryOptions): UseQueryResult<any, any> {
+  const result = useQuery(['transactions-list', page, bankAccount], () => getTransactions({ page, perPage: 10, bankAccount}), {
     staleTime: 1000 * 60 * 1,
     ...options
   })
@@ -111,6 +159,5 @@ export function generateFakeTransactions(size = 10): Transaction[] {
 }
 
 export async function saveTransaction(values: SaveTransactionValues) {
-  console.log(values)
   return await api.post('/transactions', values) 
 }

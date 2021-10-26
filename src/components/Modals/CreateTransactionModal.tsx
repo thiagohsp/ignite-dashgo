@@ -13,7 +13,6 @@ import {
   Icon,
   Heading,
 } from "@chakra-ui/react";
-import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "../../components/Form/Input";
@@ -21,8 +20,7 @@ import { NumberInput } from "../../components/Form/NumberInput";
 import { IBankAccount, ICategory, IOption } from "../../interfaces";
 import { api } from "../../services/apiClient";
 import ReactSelect, { StylesConfig } from 'react-select'
-import { theme } from "@chakra-ui/core";
-import { RiAddLine, RiArrowDownCircleFill, RiArrowUpCircleFill } from "react-icons/ri";
+import { RiArrowDownCircleFill, RiArrowUpCircleFill } from "react-icons/ri";
 import { saveTransaction, SaveTransactionValues } from "../../services/hooks/useTransactions";
 
 interface CreateTransactionModalProps {
@@ -51,8 +49,6 @@ export default function CreateTransactionModal({
         }
       })
 
-      console.log(dataOptions)
-
       setBankAccountsOptions(dataOptions)
     }
     
@@ -70,8 +66,6 @@ export default function CreateTransactionModal({
           label: `${category.group} | ${category.description}`
         }
       })
-
-      console.log(dataOptions)
 
       setCategoriesOptions(dataOptions)
     }

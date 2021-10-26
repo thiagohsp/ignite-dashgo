@@ -8,7 +8,7 @@ export default function SidebarNav() {
     <Stack spacing="12" align="flex-start">
       <MenuGroup title="GERAL">
         <MenuItem href="/dashboard" icon={RiDashboard2Line}>Dashboard</MenuItem>
-        <MenuItem href="/users" icon={RiContactsLine}>Usuários</MenuItem>
+        {/* <MenuItem href="/users" icon={RiContactsLine}>Usuários</MenuItem> */}
         <MenuItem href="/transactions" icon={RiMoneyDollarCircleLine}>Transações</MenuItem>
       </MenuGroup>
     </Stack>
