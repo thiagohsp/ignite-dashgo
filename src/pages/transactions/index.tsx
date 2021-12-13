@@ -24,7 +24,7 @@ import {
   useBreakpointValue
 } from "@chakra-ui/react";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { RiAddLine, RiFilterFill, RiFilterLine, RiSave3Fill } from "react-icons/ri";
 import ReactSelect from 'react-select';
 import Header from "../../components/Header";
@@ -33,7 +33,7 @@ import Pagination from "../../components/Pagination";
 import Sidebar from "../../components/Sidebar";
 import { IBankAccount, IOption } from '../../interfaces';
 import { api } from '../../services/apiClient';
-import { generateFakeTransactions, getTransactions, useTransactions } from "../../services/hooks/useTransactions";
+import { generateFakeTransactions, getTransactions, SaveTransactionValues, useTransactions } from "../../services/hooks/useTransactions";
 import { withSSRAuth } from "../../utils/withSSRAuth";
 
 
@@ -42,7 +42,8 @@ export default function TransactionsList({ transactions, totalCount }) {
   const [ isOpenModal, setIsOpenModal ] = useState(false);
   const [ bankAccountsOptions, setBankAccountsOptions ] = useState<IOption[]>([]);
   const [ bankAccount, setBankAccount ] = useState<number>();
-  const [ totalRegistersCount, setTotalRegistersCount ] = useState(totalCount)
+  const [ totalRegistersCount, setTotalRegistersCount ] = useState(totalCount);
+  const [ transactionData, setTransactionData ] = useState<SaveTransactionValues>()
 
   const [page, setPage] = useState(1);
 
@@ -90,6 +91,11 @@ export default function TransactionsList({ transactions, totalCount }) {
     setTotalRegistersCount(data.totalCount)
   }, [data])
 
+  const handleOpenModal = useCallback ((values?: SaveTransactionValues) => {
+    setTransactionData(values);
+    setIsOpenModal(true)
+  }, [])
+
   const handleOnCloseModal = () => {
     setIsOpenModal(false);
   }
@@ -106,6 +112,7 @@ export default function TransactionsList({ transactions, totalCount }) {
       <CreateTransactionModal 
         isOpen={isOpenModal}
         onClose={handleOnCloseModal}
+        defaultValues={transactionData}
       />
 
       <Flex w="100%" my="6" maxWidth={1480} mx="auto" px="6">
@@ -127,7 +134,7 @@ export default function TransactionsList({ transactions, totalCount }) {
                 fontSize="sm"
                 colorScheme="pink"
                 leftIcon={<Icon as={RiAddLine} fontSize="20" />}
-                onClick={() => setIsOpenModal(true)}
+                onClick={() => handleOpenModal(null)}
               >
                 Criar novo
               </Button>
@@ -195,7 +202,7 @@ export default function TransactionsList({ transactions, totalCount }) {
                       <Td>{transaction.transactionDate}</Td>
                       <Td>
                         <Box flex={1}>
-                          <Link href="">
+                          <Link onClick={() => handleOpenModal(transaction)} >
                             <Text fontWeight="bold">{transaction.title}</Text>
                             <Text fontSize="sm" color="gray.200">
                               {`${transaction.category?.group} | ${transaction.category?.description}`}

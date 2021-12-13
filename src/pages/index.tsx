@@ -44,7 +44,7 @@ export default function SignIn() {
         flexDir="column"
         width="100%"
         maxWidth={360}
-        bg="blue.200"
+        // bg="blue.200"
         boxShadow="md"
         p="8"
         borderRadius={8}

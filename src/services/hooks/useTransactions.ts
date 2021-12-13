@@ -30,6 +30,7 @@ type GetTransactionsResponse = {
 }
 
 export interface SaveTransactionValues {
+  id?: number;
   title: string;
   amount: number;
   type: string;
@@ -158,6 +159,12 @@ export function generateFakeTransactions(size = 10): Transaction[] {
   })
 }
 
-export async function saveTransaction(values: SaveTransactionValues) {
-  return await api.post('/transactions', values) 
+interface SaveTransactionParams {
+  isEditing: boolean,
+  values: SaveTransactionValues
+}
+export async function saveTransaction({ values , isEditing = false}: SaveTransactionParams) {
+  const method = isEditing ? api.post : api.put;
+  const url = [ '/transactions', isEditing && String(values.id)].join('/')
+  return await method(url, values) 
 }

@@ -137,13 +137,9 @@ export default function Dashboard({ dashboards }) {
 
             
           </SimpleGrid>
-
-            
-          <CategoriesTotalsTable data={dashboards.categoriesReportData} />
-          
-        </Stack>        
-
+        </Stack>
       </Flex>
+      <CategoriesTotalsTable data={dashboards.categoriesReportData} />
     </Flex>
 
   )

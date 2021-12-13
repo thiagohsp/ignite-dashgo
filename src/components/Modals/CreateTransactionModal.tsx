@@ -26,16 +26,20 @@ import { saveTransaction, SaveTransactionValues } from "../../services/hooks/use
 interface CreateTransactionModalProps {
   isOpen: boolean;
   onClose: () => void;
+  defaultValues?: any;
 }
 
 export default function CreateTransactionModal({
   isOpen,
   onClose,
+  defaultValues
 }: CreateTransactionModalProps) {
 
   const [ bankAccountsOptions, setBankAccountsOptions ] = useState<IOption[]>([]);
   const [ categoriesOptions, setCategoriesOptions ] = useState<IOption[]>([]);
   const [ type, setType ] = useState<"income" | "expense">();
+
+  console.log(defaultValues)
   
   useEffect(() => {
     async function loadBankAccountsOptions() {
@@ -74,7 +78,7 @@ export default function CreateTransactionModal({
   }, []) 
 
 
-  const { register, handleSubmit, formState } = useForm();
+  const { register, handleSubmit, formState } = useForm({ defaultValues });
 
   const { errors } = formState;
 
@@ -116,15 +120,14 @@ export default function CreateTransactionModal({
   }
 
   const handleSaveTransaction: SubmitHandler<SaveTransactionValues> = async (values) => {
-    await saveTransaction(values);
+    await saveTransaction({ values, isEditing: false });
   }
 
   return (
     <>
       <Modal 
         onClose={onClose} 
-        isOpen={isOpen} 
-        
+        isOpen={isOpen}
         isCentered
       >
         <ModalOverlay />

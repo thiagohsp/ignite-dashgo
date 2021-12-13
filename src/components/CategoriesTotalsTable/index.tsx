@@ -93,26 +93,26 @@ const CategoriesTotalsTable = ({ data }: CategoriesTotalsTableProps ) => {
         accessor: '08/2021',
         Cell: (props) => { return <Text textAlign="right">{Number(props.value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</Text> }
       },
-      // {
-      //   Header: 'Setembro',
-      //   accessor: '09/2021',
-      //   Cell: (props) => { <Text>returnText textAlign="right" {Number(props.value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</Text> }
-      // },
-      // {
-      //   Header: 'Outubro',
-      //   accessor: '10/2021',
-      //   Cell: (props) => { <Text>returnText textAlign="right" {Number(props.value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</Text> }
-      // },
-      // {
-      //   Header: 'Novembro',
-      //   accessor: '11/2021',
-      //   Cell: (props) => { <Text>returnText textAlign="right" {Number(props.value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</Text> }
-      // },
-      // {
-      //   Header: 'Dezembro',
-      //   accessor: '12/2021',
-      //   Cell: (props) => { <Text>returnText textAlign="right" {Number(props.value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</Text> }
-      // },
+      {
+        Header: 'Setembro',
+        accessor: '09/2021',
+        Cell: (props) => { return <Text textAlign="right">{Number(props.value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</Text> }
+      },
+      {
+        Header: 'Outubro',
+        accessor: '10/2021',
+        Cell: (props) => { return <Text textAlign="right">{Number(props.value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</Text> }
+      },
+      {
+        Header: 'Novembro',
+        accessor: '11/2021',
+        Cell: (props) => { return <Text textAlign="right">{Number(props.value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</Text> }
+      },
+      {
+        Header: 'Dezembro',
+        accessor: '12/2021',
+        Cell: (props) => { return <Text textAlign="right">{Number(props.value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</Text> }
+      },
       {
         Header: 'Total',
         accessor: 'total',
@@ -134,7 +134,7 @@ const CategoriesTotalsTable = ({ data }: CategoriesTotalsTableProps ) => {
   })
 
   return (
-    <Table {...getTableProps()} variant="simple" colorScheme="whiteAlpha" border="1px">
+    <Table {...getTableProps()} variant="striped" colorScheme="blue" border="1px">
       <Thead>
         {headerGroups.map(headerGroup => (
           <Tr {...headerGroup.getHeaderGroupProps()}>

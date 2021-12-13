@@ -23,7 +23,7 @@ export const theme = extendTheme({
     global: {
       body: {
         bg: 'white',
-        color: 'twitter.600'
+        // color: 'twitter.600'
       }
     }
   }
